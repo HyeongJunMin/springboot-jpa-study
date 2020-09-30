@@ -1,7 +1,6 @@
 package jpabook.jpashop;
 
-import static org.junit.Assert.*;
-
+import jpabook.jpashop.domain.Member;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,11 +22,11 @@ public class MemberRepositoryTest {
   @Rollback(false)
   public void saveAndFind() {
     Member member = new Member();
-    member.setUsername("memberA");
+    member.setName("memberA");
     Long id = memberRepository.save(member);
     Member foundMember = memberRepository.find(id);
     Assertions.assertThat(foundMember.getId()).isEqualTo(member.getId());
-    Assertions.assertThat(foundMember.getUsername()).isEqualTo(member.getUsername());
+    Assertions.assertThat(foundMember.getName()).isEqualTo(member.getName());
   }
 
 }
