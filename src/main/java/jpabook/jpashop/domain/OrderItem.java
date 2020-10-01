@@ -8,14 +8,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import jpabook.jpashop.domain.item.Item;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
 @Table(name = "order_item")
 @Getter @Setter
-public class OrderItem {
+public class OrderItem extends AbstractEntity {
 
   @Id @GeneratedValue
   @Column(name = "order_item_id")
@@ -32,4 +31,25 @@ public class OrderItem {
   private int orderPrice; // 주문 당시의 가격
 
   private int count; // 주문 당시 수량
+
+  /* creation method */
+  public static OrderItem createOrderItem(Item item, int orderPrice, int count) {
+    OrderItem orderItem = new OrderItem();
+    orderItem.setItem(item);
+    orderItem.setOrderPrice(orderPrice);
+    orderItem.setCount(count);
+
+    item.removeStock(count);
+    return orderItem;
+  }
+
+  /*business logic*/
+  public void cancel() {
+    getItem().addStock(count);
+  }
+
+  /*get logic*/
+  public int getTotalPrice() {
+    return orderPrice * count;
+  }
 }

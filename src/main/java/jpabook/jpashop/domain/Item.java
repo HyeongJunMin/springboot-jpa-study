@@ -1,4 +1,4 @@
-package jpabook.jpashop.domain.item;
+package jpabook.jpashop.domain;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +14,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import jpabook.jpashop.domain.Category;
+import jpabook.jpashop.exception.NotEnoughStockException;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,7 +23,7 @@ import lombok.Setter;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "dtype") // 구분컬럼
 @Getter @Setter
-public abstract class Item {
+public abstract class Item extends AbstractEntity {
 
   @Id @GeneratedValue
   @Column(name = "item_id")
@@ -34,5 +35,19 @@ public abstract class Item {
 
   @ManyToMany(mappedBy = "items")
   private List<Category> categories = new ArrayList<>();
+
+  /* business logic(DDD) */
+
+  public void addStock(int quantity) {
+    this.stockQuantity += quantity;
+  }
+
+  public void removeStock(int queantity) {
+    int restStock = this.stockQuantity - queantity;
+    if (restStock < 0) {
+      throw new NotEnoughStockException("need more stock");
+    }
+    this.stockQuantity = restStock;
+  }
 
 }

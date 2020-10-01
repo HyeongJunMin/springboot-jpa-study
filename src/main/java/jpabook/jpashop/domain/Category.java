@@ -13,14 +13,13 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import jpabook.jpashop.domain.item.Item;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
 @Table(name = "category")
 @Getter @Setter
-public class Category {
+public class Category extends AbstractEntity{
 
   @Id
   @GeneratedValue

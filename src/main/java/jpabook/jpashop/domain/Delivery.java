@@ -16,7 +16,7 @@ import lombok.Setter;
 
 @Entity
 @Getter @Setter
-public class Delivery {
+public class Delivery extends AbstractEntity {
 
   @Id @GeneratedValue
   @Column(name = "delivery_id")
