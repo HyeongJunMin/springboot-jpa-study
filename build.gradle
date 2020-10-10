@@ -2,6 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.2.10.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.10.RELEASE'
 	id 'java'
+	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 }
 
 group = 'jpabook'
@@ -12,10 +13,12 @@ configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
+	querydslapt
 }
 
 repositories {
 	mavenCentral()
+	maven { url "https://plugins.gradle.org/m2/" } // plugin 저장소
 }
 
 dependencies {
@@ -24,7 +27,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-devtools'
 	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.6.2' //JPA쿼리 파라미터를 보기좋게 보여줌
-	compileOnly 'org.projectlombok:lombok'
+	implementation 'com.querydsl:querydsl-jpa'
+	implementation 'com.querydsl:querydsl-apt'
+	implementation 'org.projectlombok:lombok'
 	runtimeOnly 'com.h2database:h2'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -33,3 +38,26 @@ dependencies {
 test {
 	useJUnitPlatform()
 }
+
+//querydsl 추가 시작 - 설정 출처 : https://velog.io/@aidenshin/Querydsl-Gradle-%EC%84%A4%EC%A0%95
+def querydslDir = "$buildDir/generated/querydsl"
+
+querydsl {
+	jpa = true
+	querydslSourcesDir = querydslDir
+}
+
+sourceSets {
+	main.java.srcDir querydslDir
+}
+
+configurations {
+	querydsl.extendsFrom compileClasspath
+}
+
+compileQuerydsl {
+	options.annotationProcessorPath = configurations.querydsl
+}
+//querydsl 추가 끝
+
+//TODO com.querydsl com.mysema로 바꿔보자
